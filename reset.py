@@ -63,9 +63,9 @@ def show_devices():
 
 while True:
     command = lower(input("What would you like to do?"))
-    if command == 'add' or command = 'start':
+    if command == 'add' or command == 'start':
         add_device()
     elif command == 'end':
         remove_device()
-    elif command == 'show' or command = 'active':
+    elif command == 'show' or command == 'active':
         show_devices()
