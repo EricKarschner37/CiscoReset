@@ -17,6 +17,7 @@ def reply_to_with(com, target, message):
 	return
 
 def reset_on_com(com):
+    	reply_to_with(com, b'\rswitch: ', 'del flash:config.text' + '\r')
 	reply_to_with(com, b'(y/n)?', 'y' + '\r')
 	reply_to_with(com, b'\rswitch: ', 'del flash:vlan.dat' + '\r')
 	reply_to_with(com, b'(y/n)?', 'y' + '\r')
