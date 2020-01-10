@@ -36,7 +36,7 @@ def add_device():
     coms[port_num] = ser 
     thread.start()
 
-def initialize_port(port_str):
+def initialize_port(port_num):
     ser = serial.Serial(
            port='COM' + port_num,
            baudrate=9600,
