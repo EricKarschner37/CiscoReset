@@ -62,7 +62,7 @@ def show_devices():
     print(coms.keys)
 
 while True:
-    command = lower(input("What would you like to do?"))
+    command = input("What would you like to do?").lower()
     if command == 'add' or command == 'start':
         add_device()
     elif command == 'end':
