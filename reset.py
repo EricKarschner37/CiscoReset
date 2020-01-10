@@ -28,7 +28,9 @@ def reset_on_com(com):
 		if b'RETURN' in line:
 			if error: print("Something went wrong with the device at " + com.name)
 			else: print("Device at " + com.name + " is reset.")
-			break
+                        com.close()
+                        del coms[com.name[:-2]]
+                        break
 
 def add_device():
     port_num = str(raw_input("What number COM port would you like to reset?\n"))
