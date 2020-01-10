@@ -7,11 +7,10 @@ def reply_to_with(com, target, message):
 	global error
 	while(True):
 		line = com.read_until(target)
-		if b'read only file system' in line or b'invalid' in line or b'Error' in line:
-	    	    error = True
-                if b'Error loading "flash:' in line:
+                if b'Error loading' in line:
                     print("The device at " + com.name + " has no operating system.")
                     com.close()
+		    del coms[com.name[3:]]
                     break
 		if target in line:
 	     	    if message == 'flash_init' + '\r':
@@ -29,6 +28,11 @@ def reset_on_com(com):
 
 	while(True):
 		line = com.read_until(b'RETURN')
+                if b'Error loading "flash:' in line:
+                    print("The device at " + com.name + " has no operating system.")
+                    com.close()
+                    del coms[com.name[3:]]
+                    break
 		if b'RETURN' in line:
 			if error: print("Something went wrong with the device at " + com.name)
 			else: print("Device at " + com.name + " is reset.")
