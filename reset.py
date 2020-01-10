@@ -47,14 +47,14 @@ def initialize_port(port_str):
     return ser
 
 def add_device():
-    port_num = str(input("What number COM port would you like to reset?\n"))
+    port_num = str(raw_input("What number COM port would you like to reset?\n"))
     ser = initalize_port(port_num)
     thread = threading.Thread(target=reset_on_com, args=(ser,))
     coms[port_num] = ser 
     thread.start()
 
 def remove_device():
-    port_num = str(input("What number COM port would you like to end?\n"))
+    port_num = str(raw_input("What number COM port would you like to end?\n"))
     com = coms.pop(port_num)
     com.close()
 
@@ -62,7 +62,7 @@ def show_devices():
     print(coms.keys)
 
 while True:
-    command = input("What would you like to do?\n").lower()
+    command = raw_input("What would you like to do?\n").lower()
     if command == 'add' or command == 'start':
         add_device()
     elif command == 'end':
