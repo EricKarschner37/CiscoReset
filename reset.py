@@ -8,16 +8,12 @@ def reply_to_with(com, target, message):
 	while(True):
 		line = com.read_until(target)
 		if b'read only file system' in line or b'invalid' in line or b'Error' in line:
-			error = True
+	    	    error = True
 		if target in line:
-			if message == 'flash_init' + '\r':
-				try:
-					print("Press Enter to continue \n")
-					raw_input()
-				except EOFError:
-					print("Continuing... \n")
-			com.write(message.encode())
-			break
+	     	    if message == 'flash_init' + '\r':
+			raw_input("Press Enter to continue \n")
+		    com.write(message.encode())
+    	            break
 	return
 
 def reset_on_com(com):
@@ -42,7 +38,7 @@ def add_device():
 
 def initialize_port(port_str):
     ser = serial.Serial(
-           port='COM' + portNum,
+           port='COM' + port_num,
            baudrate=9600,
            parity='N',
            stopbits=1,
@@ -55,8 +51,9 @@ def initialize_port(port_str):
 
 def remove_device():
     port_num = str(raw_input("What number COM port would you like to end?\n"))
-    com = coms.pop(port_num)
+    com = coms[port_num]
     com.close()
+    del coms[port_num]
 
 def show_devices():
     print(coms.keys())
