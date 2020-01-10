@@ -33,6 +33,13 @@ def reset_on_com(com):
 			else: print("Device at " + com.name + " is reset.")
 			break
 
+def add_device():
+    port_num = str(raw_input("What number COM port would you like to reset?\n"))
+    ser = initialize_port(port_num)
+    thread = threading.Thread(target=reset_on_com, args=(ser,))
+    coms[port_num] = ser 
+    thread.start()
+
 def initialize_port(port_str):
     ser = serial.Serial(
            port='COM' + portNum,
@@ -45,13 +52,6 @@ def initialize_port(port_str):
          )
     reply_to_with(ser, b'\rswitch: ', 'flash_init' + '\r')
     return ser
-
-def add_device():
-    port_num = str(raw_input("What number COM port would you like to reset?\n"))
-    ser = initalize_port(port_num)
-    thread = threading.Thread(target=reset_on_com, args=(ser,))
-    coms[port_num] = ser 
-    thread.start()
 
 def remove_device():
     port_num = str(raw_input("What number COM port would you like to end?\n"))
