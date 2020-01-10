@@ -1,7 +1,7 @@
 import serial
 import threading
 
-ports = set()
+coms = dict()
 error = False
 def reply_to_with(com, target, message):
 	global error
@@ -21,10 +21,6 @@ def reply_to_with(com, target, message):
 	return
 
 def reset_on_com(com):
-	global ports
-
-	reply_to_with(com, b'\rswitch: ', 'flash_init' + '\r')
-	reply_to_with(com, b'\rswitch: ', 'del flash:config.text' + '\r')
 	reply_to_with(com, b'(y/n)?', 'y' + '\r')
 	reply_to_with(com, b'\rswitch: ', 'del flash:vlan.dat' + '\r')
 	reply_to_with(com, b'(y/n)?', 'y' + '\r')
@@ -33,26 +29,43 @@ def reset_on_com(com):
 	while(True):
 		line = com.read_until(b'RETURN')
 		if b'RETURN' in line:
-			ports.remove(com.name[3:])
 			if error: print("Something went wrong with the device at " + com.name)
 			else: print("Device at " + com.name + " is reset.")
 			break
 
-while True:
-	raw_input()
-	print("Active: ")
-	print([port for port in ports])
-	portNum = str(input("What number COM port would you like to reset?\n"))
-	ser = serial.Serial(
-		port='COM' + portNum,
-		baudrate=9600,
-		parity="N",
-		stopbits=1,
-		xonxoff=False,
-		bytesize=8,
-		timeout=8
-	)
-	ports.add(portNum)
-	thread = threading.Thread(target=reset_on_com, args=(ser,))
-	thread.start()
+def initialize_port(port_str):
+    ser = serial.Serial(
+           port='COM' + portNum,
+           baudrate=9600,
+           parity='N',
+           stopbits=1,
+           xonxoff=False,
+           bytesize=8,
+           timeout=8
+         )
+    reply_to_with(ser, b'\rswitch: ', 'flash_init' + '\r')
+    return ser
 
+def add_device():
+    port_num = str(input("What number COM port would you like to reset?\n"))
+    ser = initalize_port(port_num)
+    thread = threading.Thread(target=reset_on_com, args=(ser,))
+    coms[port_num] = ser 
+    thread.start()
+
+def remove_device():
+    port_num = str(input("What number COM port would you like to end?\n"))
+    com = coms.pop(port_num)
+    com.close()
+
+def show_devices():
+    print(coms.keys)
+
+while True:
+    command = lower(input("What would you like to do?"))
+    if command == 'add' or command = 'start':
+        add_device()
+    elif command == 'end':
+        remove_device()
+    elif command == 'show' or command = 'active':
+        show_devices()
