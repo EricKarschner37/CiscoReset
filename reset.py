@@ -9,6 +9,10 @@ def reply_to_with(com, target, message):
 		line = com.read_until(target)
 		if b'read only file system' in line or b'invalid' in line or b'Error' in line:
 	    	    error = True
+                if b'Error loading "flash:' in line:
+                    print("The device at " + com.name + " has no operating system.")
+                    com.close()
+                    break
 		if target in line:
 	     	    if message == 'flash_init' + '\r':
 			raw_input("Press Enter to continue \n")
@@ -29,7 +33,7 @@ def reset_on_com(com):
 			if error: print("Something went wrong with the device at " + com.name)
 			else: print("Device at " + com.name + " is reset.")
                         com.close()
-                        del coms[com.name[:-2]]
+                        del coms[com.name[3:]]
                         break
 
 def add_device():
@@ -54,6 +58,12 @@ def initialize_port(port_num):
 
 def remove_device():
     port_num = str(raw_input("What number COM port would you like to end?\n"))
+    if port_num.lower() == 'all':
+        for num in coms:
+            com = coms[num]
+            com.close()
+            del coms[num]
+        return
     com = coms[port_num]
     com.close()
     del coms[port_num]
