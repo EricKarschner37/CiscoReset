@@ -59,7 +59,7 @@ def remove_device():
     com.close()
 
 def show_devices():
-    print(coms.keys)
+    print(coms.keys())
 
 while True:
     command = raw_input("What would you like to do?\n").lower()
